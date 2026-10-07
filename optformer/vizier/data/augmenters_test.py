@@ -117,7 +117,7 @@ class ObjectiveNormalizerTest(parameterized.TestCase):
     study = vz.ProblemAndTrials(problem, trials=self.trials)
 
     new_study = augmenters.ObjectiveNormalizer().augment_study(study)
-    metrics = [t.final_measurement.metrics['m'].value for t in new_study.trials]  # pytype:disable=attribute-error
+    metrics = [t.final_measurement.metrics['m'].value for t in new_study.trials]  # pyrefly: ignore[missing-attribute]
     self.assertEqual(metrics, expected)
 
 
@@ -140,7 +140,7 @@ class TrialsSorterTest(parameterized.TestCase):
     study = vz.ProblemAndTrials(problem, trials=self.trials)
 
     new_study = augmenters.TrialsSorter().augment_study(study)
-    metrics = [t.final_measurement.metrics['m'].value for t in new_study.trials]  # pytype:disable=attribute-error
+    metrics = [t.final_measurement.metrics['m'].value for t in new_study.trials]  # pyrefly: ignore[missing-attribute]
     self.assertEqual(metrics, expected)
 
 
@@ -192,7 +192,7 @@ class BestTrialOnlyTest(parameterized.TestCase):
 
     new_study = augmenters.BestTrialOnly().augment_study(study)
     self.assertLen(new_study.trials, 1)
-    metric = new_study.trials[0].final_measurement.metrics['m'].value  # pytype:disable=attribute-error
+    metric = new_study.trials[0].final_measurement.metrics['m'].value  # pyrefly: ignore[missing-attribute]
     self.assertEqual(metric, expected)
 
 
@@ -270,7 +270,7 @@ class ConvertToMaximizationProblemTest(absltest.TestCase):
         vz.MetricInformation(name='m2', goal=vz.ObjectiveMetricGoal.MAXIMIZE),
     )
 
-    trial_metrics = study.trials[0].final_measurement.metrics  # pytype:disable=attribute-error
+    trial_metrics = study.trials[0].final_measurement.metrics  # pyrefly: ignore[missing-attribute]
     self.assertEqual(trial_metrics['m1'].value, 1.0)
     self.assertEqual(trial_metrics['m2'].value, -1.0)
 
@@ -304,7 +304,7 @@ class RandomMetricFlipper(absltest.TestCase):
     flipper = augmenters.RandomMetricFlipper(seed=1)
     study = flipper.augment(self.study)
 
-    trial_metrics = study.trials[0].final_measurement.metrics  # pytype:disable=attribute-error
+    trial_metrics = study.trials[0].final_measurement.metrics  # pyrefly: ignore[missing-attribute]
     self.assertEqual(trial_metrics['m1'].value, -1.0)
     self.assertEqual(trial_metrics['m2'].value, -1.0)
 
@@ -360,6 +360,26 @@ class StandardizeSpaceAugmenterTest(absltest.TestCase):
     for _ in range(5):
       study = augmenter.augment(study)
       self.assertEqual(study, idempotent_study)
+
+  def test_conditional_space(self):
+    problem = vz.ProblemStatement()
+    root = problem.search_space.root
+    root.add_categorical_param('model_type', ['linear', 'dnn'])
+    dnn = root.select('model_type', ['dnn'])
+    dnn.add_float_param('learning_rate', 0.0001, 1.0)
+    linear = root.select('model_type', ['linear'])
+    linear.add_float_param('learning_rate', 0.1, 1.0)
+
+    trial1 = vz.Trial(parameters={'model_type': 'dnn', 'learning_rate': 0.01})
+    trial2 = vz.Trial(parameters={'model_type': 'linear', 'learning_rate': 0.5})
+    study = vz.ProblemAndTrials(problem=problem, trials=[trial1, trial2])
+
+    augmenter = augmenters.StandardizeSearchSpace()
+    new_study = augmenter.augment(study)
+
+    self.assertFalse(new_study.problem.search_space.is_conditional)
+    for pc in new_study.problem.search_space.parameters:
+      self.assertRegex(pc.name, r'^x\d+$')
 
 
 if __name__ == '__main__':

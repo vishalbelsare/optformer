@@ -25,7 +25,7 @@ from t5x import decoding
 # TODO: Due to a bug, `state.step` and `state.cur_index` both start at 0
 # at the very beginning of the sequence, regardless of prompting. Ideally,
 # `shift` should no longer be an argument and should just be `state.step`.
-class IndexLogitRestrictor(decoding.LogitCallbackFn):
+class IndexLogitRestrictor(decoding.LogitCallbackFn):  # pyrefly: ignore[invalid-inheritance]
   """Restricts logit values depending only on the index."""
 
   def __call__(

@@ -125,7 +125,7 @@ class DigitByDigitFloatTokenSerializer(
 
     sign = -1 if tokens[0] == '-' else 1
     mantissa = int(''.join(map(str, tokens[1:-1])))
-    exp = int(''.join(tokens[-1]).lstrip('E'))
+    exp = int(''.join(tokens[-1]).lstrip('E'))  # pyrefly: ignore[no-matching-overload]
 
     return float(sign * mantissa * 10**exp)
 

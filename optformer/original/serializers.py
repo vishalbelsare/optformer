@@ -107,7 +107,7 @@ class QuantizedSuggestionSerializer(
     value = suggestion.parameters[config.name].value
 
     if config.type == vz.ParameterType.CATEGORICAL:
-      return config.feasible_values.index(value)
+      return config.feasible_values.index(value)  # pyrefly: ignore[bad-argument-type]
 
     elif config.type == vz.ParameterType.DISCRETE:
       # Convert to np.float32 to avoid errors due to small differences.
@@ -181,8 +181,8 @@ class QuantizedSuggestionSerializer(
         pass
       elif pc.type in [vz.ParameterType.DOUBLE, vz.ParameterType.INTEGER]:
         vz_converter = _vizier_converter_factory(pc)
-        q = self.quantizer.unmap(q)
-        params[pc.name] = vz_converter.to_parameter_values(np.array(q))[0]
+        q = self.quantizer.unmap(q)  # pyrefly: ignore[bad-argument-type]
+        params[pc.name] = vz_converter.to_parameter_values(np.array(q))[0]  # pyrefly: ignore[unsupported-operation]
       elif pc.type in [vz.ParameterType.CATEGORICAL, vz.ParameterType.DISCRETE]:
         params[pc.name] = vz.ParameterValue(pc.feasible_values[int(q)])
       else:
@@ -298,7 +298,7 @@ class QuantizedMeasurementSerializer(
         raw_objective = self.metrics_scalers[metric_config.name].unmap(
             normalized_objective
         )
-        measurement.metrics[metric_config.name] = raw_objective
+        measurement.metrics[metric_config.name] = raw_objective  # pyrefly: ignore[unsupported-operation]
       elif metric_val == self.INFEASIBLE:
         measurement.metrics[metric_config.name] = math.nan
       elif metric_val == self.MISSING:

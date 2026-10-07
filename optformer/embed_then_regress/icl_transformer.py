@@ -220,18 +220,18 @@ class ICLTransformer(nn.Module):
 
     # Combine target and historical (padded) embeddings.
     target_index = jnp.sum(mask, dtype=jnp.int32)  # [1]
-    padded_target_emb = jnp.zeros_like(x_pad_emb)
+    padded_target_emb = jnp.zeros_like(x_pad_emb)  # pyrefly: ignore[bad-argument-type]
     padded_target_emb = jax.lax.dynamic_update_slice_in_dim(
         padded_target_emb, x_targ_emb, start_index=target_index, axis=0
     )
     w_mask = jnp.expand_dims(mask, axis=-1)  # [L, 1]
-    x_emb = x_pad_emb * w_mask + padded_target_emb * (1 - w_mask)  # [L, E]
+    x_emb = x_pad_emb * w_mask + padded_target_emb * (1 - w_mask)  # [L, E]  # pyrefly: ignore[unsupported-operation]
 
     if self.use_metadata:  # Attach metadata embeddings too.
       if cache.metadata_emb is None:
         cache = dataclasses.replace(cache, metadata_emb=self.embed(metadata))
       metadata_emb = cache.metadata_emb  # [E]
-      metadata_emb = jnp.expand_dims(metadata_emb, axis=0)  # [1, E]
+      metadata_emb = jnp.expand_dims(metadata_emb, axis=0)  # [1, E]  # pyrefly: ignore[bad-argument-type]
       metadata_emb = jnp.repeat(metadata_emb, x_emb.shape[0], axis=0)  # [L, E]
       x_emb = jnp.concatenate((x_emb, metadata_emb), axis=-1)  # [L, 2E]
 

@@ -218,10 +218,10 @@ class VizierOptimizerTest(AlgorithmTest):
     n_cat_features = empty_features.categorical.shape[-1]
     xs = types.ModelInput(
         continuous=types.PaddedArray.as_padded(
-            np.random.uniform(0.0, 1.0, size=(batch_size, n_cont_features))
+            np.random.uniform(0.0, 1.0, size=(batch_size, n_cont_features))  # pyrefly: ignore[bad-argument-type]
         ),
         categorical=types.PaddedArray.as_padded(
-            np.zeros((batch_size, n_cat_features), dtype=types.INT_DTYPE)
+            np.zeros((batch_size, n_cat_features), dtype=types.INT_DTYPE)  # pyrefly: ignore[bad-argument-type]
         ),
     )
     trials_tokens = self.algorithm._tokenize_suggestion_features(xs)

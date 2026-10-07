@@ -23,7 +23,7 @@ _T = TypeVar('_T')
 class Filter(Generic[_T], abc.ABC):
   """Filter abstraction."""
 
-  def __call__(self, obj: _T, /) -> bool:
+  def __call__(self, obj: _T, /) -> bool:  # pyrefly: ignore[bad-return]
     """Filters an object.
 
     Args:

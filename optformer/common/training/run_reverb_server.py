@@ -14,6 +14,9 @@
 
 """Launches a Reverb server for collecting training data."""
 
+import logging
+import signal
+import sys
 from absl import app
 from absl import flags
 import reverb
@@ -21,7 +24,10 @@ from reverb.platform.default import checkpointers
 
 
 _BUFFER_SIZE = flags.DEFINE_integer(
-    'buffer_size', int(10000), 'Reverb buffer size.'
+    'buffer_size', int(100000), 'Reverb buffer size.'
+)
+_MIN_SIZE = flags.DEFINE_integer(
+    'min_size', int(1), 'Min size before sampling is allowed.'
 )
 _TABLE_NAMES = flags.DEFINE_list(
     'table_names',
@@ -37,6 +43,8 @@ _TABLE_TYPE = flags.DEFINE_enum(
     'Uniform allows insertion w/ random replacement. Queue blocks when full.',
 )
 
+default_checkpointer = checkpointers.default_checkpointer
+
 
 def main(_):
   """Creates a Reverb server with multiple tables for collecting data."""
@@ -50,7 +58,7 @@ def main(_):
               sampler=reverb.selectors.Uniform(),
               remover=reverb.selectors.Uniform(),
               max_size=_BUFFER_SIZE.value,
-              rate_limiter=reverb.rate_limiters.MinSize(1),
+              rate_limiter=reverb.rate_limiters.MinSize(_MIN_SIZE.value),
               max_times_sampled=1,
           )
       )
@@ -61,11 +69,22 @@ def main(_):
     else:
       raise ValueError(f'Unknown table type: {_TABLE_TYPE.value}')
 
-  checkpointer = None
   if _CHECKPOINTING.value:
-    checkpointer = checkpointers.default_checkpointer()
+    checkpointer = default_checkpointer()
+  else:
+    checkpointer = checkpointers.TempDirCheckpointer()
 
   server = reverb.Server(tables, port=_PORT.value, checkpointer=checkpointer)
+
+  def handle_sigterm(signum, frame):
+    del signum, frame
+    logging.info('Received SIGTERM. Shutting down Reverb cleanly...')
+    server.stop()  # Checkpointer flushes and closes file handles.
+    sys.exit(0)
+
+  # Properly handle SIGTERM to flush the checkpointer.
+  signal.signal(signal.SIGTERM, handle_sigterm)
+
   server.wait()
 
 

@@ -86,7 +86,7 @@ class UnnormalizedVocab(FloatVocab):
     )
     mask = np.zeros(self.size, dtype=bool)
     mask[token_ids_allowed] = True
-    return mask
+    return mask  # pyrefly: ignore[bad-return]
 
   def to_int(self, f: float) -> list[int]:
     str_f = self.serializer.to_str(f)
@@ -229,7 +229,7 @@ class RepeatingVocab(FloatVocab):
     )
 
     # Perform majority voting on each column (token).
-    voted_tokens = np.apply_along_axis(
+    voted_tokens = np.apply_along_axis(  # pyrefly: ignore[no-matching-overload]
         lambda x: np.bincount(x).argmax(), axis=0, arr=tokens
     )
 

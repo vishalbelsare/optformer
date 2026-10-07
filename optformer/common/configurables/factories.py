@@ -91,12 +91,12 @@ def register_task(
 
   source = seqio.FunctionDataSource(
       seqio_dataset_fn,
-      splits=(tfds.Split.TRAIN, tfds.Split.VALIDATION, tfds.Split.TEST),
+      splits=(tfds.Split.TRAIN, tfds.Split.VALIDATION, tfds.Split.TEST),  # pyrefly: ignore[missing-attribute]
   )
 
   return seqio.TaskRegistry.add(
       task_name,
-      source,
+      source,  # pyrefly: ignore[bad-argument-type]
       output_features,
       preprocessors=[
           seqio.preprocessors.tokenize,

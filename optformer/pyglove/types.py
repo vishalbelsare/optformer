@@ -19,7 +19,7 @@ import pyglove as pg
 # Once `pg.typing.XXX` is made a PyType annotation, we can use these as regular
 # pytypes, in e.g. `PyGloveExperimenter`.
 SearchSpace = pg.typing.Object(pg.Symbolic)
-Suggestion = pg.typing.Any()
+Suggestion = pg.typing.Any()  # pyrefly: ignore[bad-instantiation]
 
 # Over time this may be updated to contain np.float32 and np.float64.
 ObjectiveValue = pg.typing.Float()

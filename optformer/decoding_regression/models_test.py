@@ -56,7 +56,7 @@ class ModelTest(parameterized.TestCase):
         validation_split=0.2,
     )
 
-    floats = decoder.decode(X[:10], top_k=top_k, top_p=top_p)
+    floats = decoder.decode(X[:10], top_k=top_k, top_p=top_p)  # pyrefly: ignore[bad-argument-type]
     self.assertLen(floats, 10)
 
 

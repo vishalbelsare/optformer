@@ -97,7 +97,7 @@ class QuantizedSerializersTest(parameterized.TestCase):
     completed_trial_params = self.completed_trial.parameters.as_dict()
     for k, v in trial_params.items():
       if isinstance(v, float):  # Rounding errors from quantization.
-        self.assertAlmostEqual(v, completed_trial_params[k], delta=1e-2)
+        self.assertAlmostEqual(v, completed_trial_params[k], delta=1e-2)  # pyrefly: ignore[no-matching-overload]
       else:
         self.assertEqual(v, completed_trial_params[k])
 
@@ -126,7 +126,7 @@ class QuantizedSerializersTest(parameterized.TestCase):
     measurement = self.measurement_serializer.from_str("<502>")
     np.testing.assert_almost_equal(
         measurement.metrics["x1"].value,
-        self.completed_trial.final_measurement.metrics["x1"].value,  # pytype:disable=attribute-error
+        self.completed_trial.final_measurement.metrics["x1"].value,  # pyrefly: ignore[missing-attribute]
     )
 
     # MetricsConfig only allows single objectives.

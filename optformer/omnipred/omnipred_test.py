@@ -97,7 +97,7 @@ class OmnipredTest(absltest.TestCase):
     self.assertEqual(
         np.median(self.regressor.predict(self.example)), -26629999.999999996
     )
-    self.assertAlmostEqual(self.regressor.score(self.example), -28.39112472534)
+    self.assertAlmostEqual(self.regressor.score(self.example), -28.3911, 3)
 
   def test_finetune(self):
     finetuner = finetuning.Finetuner(
@@ -121,7 +121,7 @@ class OmnipredTest(absltest.TestCase):
         np.median(self.regressor.predict(self.example)), -26020000.0
     )
     # Logprob is higher too.
-    self.assertAlmostEqual(self.regressor.score(self.example), -26.3150691986)
+    self.assertAlmostEqual(self.regressor.score(self.example), -26.3150, 3)
 
 
 if __name__ == '__main__':

@@ -135,7 +135,7 @@ class Finetuner(Generic[_D]):
   def _loss(self, params: models.PyTree, data: Sequence[_D]) -> float:
     """Compute total loss over data."""
     jit_loss_fn = jax.jit(self.model.loss_fn)
-    num_batches = math.ceil(len(data) / self.batch_per_tpu)
+    num_batches = math.ceil(len(data) / self.batch_per_tpu)  # pyrefly: ignore[unsupported-operation]
 
     ds = self.inference_dataset_fn(data)
     ds = ds.batch(self.batch_per_tpu, drop_remainder=False)

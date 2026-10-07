@@ -58,7 +58,7 @@ class QuantizedVocabulary(vocabs.HybridVocabulary[float]):
     self.num_quantization_bins = num_quantization_bins
 
   @property
-  def deserializer(self) -> s_lib.IntegerTokenSerializer:
+  def deserializer(self) -> s_lib.IntegerTokenSerializer:  # pyrefly: ignore[bad-override]
     """To deal with pytypes and only deserializes integer tokens."""
     return self._integer_serializer
 

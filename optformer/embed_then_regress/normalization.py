@@ -146,12 +146,12 @@ class LinearScalingWarper(StatefulWarper):
     self._y_max = np.max(ys)
 
   def warp(self, ys: jt.Float[np.ndarray, 'L']) -> jt.Float[np.ndarray, 'L']:
-    norm_diff = (ys - self._y_min) / (self._y_max - self._y_min + _EPS) - 0.5
+    norm_diff = (ys - self._y_min) / (self._y_max - self._y_min + _EPS) - 0.5  # pyrefly: ignore[unsupported-operation]
     return 2.0 * self._scale * norm_diff
 
   def unwarp(self, ys: jt.Float[np.ndarray, 'L']) -> jt.Float[np.ndarray, 'L']:
     ys = 0.5 * ys / self._scale
-    return (ys + 0.5) * (self._y_max - self._y_min) + self._y_min
+    return (ys + 0.5) * (self._y_max - self._y_min) + self._y_min  # pyrefly: ignore[unsupported-operation]
 
 
 class LogDampenWaper(StatefulWarper):

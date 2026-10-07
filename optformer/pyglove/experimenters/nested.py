@@ -55,7 +55,7 @@ class MultiSwitchExperimenter(base.PyGloveExperimenter):
       child_value = self.experimenters[i].evaluate(child_suggestion)
       child_values.append(child_value)
 
-    return self.aggregation_fn(child_values)
+    return self.aggregation_fn(child_values)  # pyrefly: ignore[no-matching-overload]
 
   def search_space(self) -> pg.hyper.ManyOf:
     indices_and_children = []

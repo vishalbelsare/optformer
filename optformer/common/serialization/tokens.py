@@ -46,7 +46,7 @@ class UnitTokenSerializer(TokenSerializer[_V]):
     m = re.fullmatch(pattern, s)
     if not m:
       raise ValueError(f'Input string {s} is not a valid token.')
-    return self.type(m.group(1))
+    return self.type(m.group(1))  # pyrefly: ignore[bad-argument-count]
 
   @property
   @abc.abstractmethod
@@ -92,7 +92,7 @@ class UnitSequenceTokenSerializer(Generic[_V], TokenSerializer[Sequence[_V]]):
   """
 
   token_serializers: Sequence[UnitTokenSerializer[_V]] = attrs.field(
-      factory=lambda: [IntegerTokenSerializer(), StringTokenSerializer()]
+      factory=lambda: [IntegerTokenSerializer(), StringTokenSerializer()]  # pyrefly: ignore[bad-assignment]
   )
 
   def to_str(self, obj: Sequence[Any], /) -> str:

@@ -47,9 +47,9 @@ def produce_data(
   """
   if sample_probs is None:
     sample_probs = {
-        tfds.Split.TRAIN: 0.989,
-        tfds.Split.VALIDATION: 0.01,
-        tfds.Split.TEST: 0.001,  # Not used by trainer. Only for visualization.
+        tfds.Split.TRAIN: 0.989,  # pyrefly: ignore[missing-attribute]
+        tfds.Split.VALIDATION: 0.01,  # pyrefly: ignore[missing-attribute]
+        tfds.Split.TEST: 0.001,  # Not used by trainer. Only for visualization.  # pyrefly: ignore[missing-attribute]
     }
 
   if seed is None:

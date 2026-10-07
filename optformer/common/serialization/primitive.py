@@ -86,7 +86,7 @@ class PrimitiveSerializer(base.Serializer[PrimitiveType]):
   def _bool_to_str(self, b: bool) -> str:
     return str(b)
 
-  def _none_to_str(self, n: type(None)) -> str:
+  def _none_to_str(self, n: type(None)) -> str:  # pyrefly: ignore[invalid-annotation]
     return 'None'
 
   def _value_to_str(self, v: Union[bool, str, int, float]) -> str:

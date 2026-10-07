@@ -44,8 +44,8 @@ class _OmniPredLogitRestrictor(decoding.IndexLogitRestrictor):
     logits_masks[0, self.vocab.initial_token_id] = 1.0
 
     # Only turns on index-dependent custom tokens representing floats.
-    for i in range(self.vocab.deserializer.num_tokens_per_obj):  # pytype:disable=attribute-error
-      tokens_used = self.vocab.deserializer.tokens_used(i)  # pytype:disable=attribute-error
+    for i in range(self.vocab.deserializer.num_tokens_per_obj):
+      tokens_used = self.vocab.deserializer.tokens_used(i)
       ids = [self.vocab.extra_token_id(t) for t in tokens_used]
       logits_masks[i + 1, ids] = 1.0
 
@@ -80,7 +80,7 @@ class OmniPred(Generic[_Example]):
     # Setup and jit logit restriction.
     predict_batch_with_aux = functools.partial(
         self.inference_config.model.predict_batch_with_aux,
-        decoder_params={
+        decoder_params={  # pyrefly: ignore[unexpected-keyword]
             'max_decode_steps': self._vocab.decode_length,
             'logit_callback_fn': _OmniPredLogitRestrictor(self._vocab),
         },
@@ -123,7 +123,7 @@ class OmniPred(Generic[_Example]):
 
     toks, _ = self._sample_tokens(batch)
     toks = jnp.squeeze(toks, axis=0)  # [S, L]
-    return [self._vocab.decode_to_object(t) for t in toks]
+    return [self._vocab.decode_to_object(t) for t in toks]  # pyrefly: ignore[bad-argument-type]
 
   def score(self, example: _Example) -> float:
     """Produce logprobs for a given (x,y) example."""

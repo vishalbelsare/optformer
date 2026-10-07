@@ -100,7 +100,7 @@ class SymbolicRegressionEvolvable(pg.hyper.Evolvable):
       return another_op(**v.sym_init_args)
     elif isinstance(v, Var):
       # Or randomly replace a variable
-      variables = v.seen_vars() - set([v.name, v.parent_func().name])
+      variables = v.seen_vars() - set([v.name, v.parent_func().name])  # pyrefly: ignore[missing-attribute]
       if variables:
         return Var(random.choice(list(variables)))
 

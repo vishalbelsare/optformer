@@ -83,11 +83,11 @@ def create_train_state(
   rng = jax.random.PRNGKey(seed)
   example_batch = compress_batch(example_batch)
   params = model.init(
-      rng, method=model.fit, deterministic=False, **example_batch
+      rng, method=model.fit, deterministic=False, **example_batch  # pyrefly: ignore[bad-argument-type]
   )
 
   opt_state = optimizer.init(params)
-  return TrainState(jnp.array(0), params, opt_state, rng)
+  return TrainState(jnp.array(0), params, opt_state, rng)  # pyrefly: ignore[bad-argument-type]
 
 
 def loss_fn(
@@ -100,19 +100,19 @@ def loss_fn(
   """Loss function with metrics."""
   # pylint: disable=invalid-name
   mean, std = model.apply(
-      params, deterministic=not training, rng=rng, method=model.fit, **batch
+      params, deterministic=not training, rng=rng, method=model.fit, **batch  # pyrefly: ignore[bad-argument-type]
   )
-  nlogprob = -jax.scipy.stats.norm.logpdf(batch['y'], mean, std)  # [B, L]
+  nlogprob = -jax.scipy.stats.norm.logpdf(batch['y'], mean, std)  # [B, L]  # pyrefly: ignore[bad-argument-type]
 
   # Only compute loss over target ys. Mask is BxL where True denotes context
   # token and False otherwise.
   target_mask = 1 - batch['mask']  # [B, L]
   target_nlogprob = nlogprob * target_mask  # [B, L]
 
-  avg_nlogprob = metrics_lib.masked_mean(target_nlogprob, target_mask)
+  avg_nlogprob = metrics_lib.masked_mean(target_nlogprob, target_mask)  # pyrefly: ignore[bad-argument-type]
   loss = jnp.mean(avg_nlogprob)  # [B] -> Scalar
 
-  metrics = metrics_lib.default_metrics(mean, batch['y'], target_mask)
+  metrics = metrics_lib.default_metrics(mean, batch['y'], target_mask)  # pyrefly: ignore[bad-argument-type]
   metrics['loss'] = loss
   return loss, metrics
 
@@ -137,7 +137,7 @@ def train_step(
   )
   new_params = optax.apply_updates(train_state.params, updates)
   new_state = TrainState(
-      train_state.step + 1, new_params, new_opt_state, new_rng
+      train_state.step + 1, new_params, new_opt_state, new_rng  # pyrefly: ignore[bad-argument-type]
   )
 
   metrics = {f'train_{k}': v for k, v in metrics.items()}

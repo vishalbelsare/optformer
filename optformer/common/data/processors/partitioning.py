@@ -43,4 +43,4 @@ class Partitioner(base.Processor[Dict[str, tf.Tensor]]):
 
     ratios = list(self.split_ratios.values())
     split_indices = (batch_size * np.cumsum(ratios)[:-1]).astype(np.int_)
-    return np.split(s, split_indices, axis=0)
+    return np.split(s, split_indices, axis=0)  # pyrefly: ignore[bad-return]

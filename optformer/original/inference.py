@@ -298,7 +298,7 @@ class QuantizedInferencer:
       index = seq_utils.count_not_from(studies["decoder_input_tokens"]) - 1
 
     # pylint: disable=protected-access
-    full_logits: Float[Array, "*B L V"] = self.model._compute_logits(
+    full_logits: Float[Array, "*B L V"] = self.model._compute_logits(  # pyrefly: ignore[bad-assignment]
         params=self.weights, batch=studies
     )
     # pylint: enable=protected-access

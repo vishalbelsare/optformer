@@ -27,9 +27,9 @@ _T = TypeVar('_T')
 class RegressorEvaluator(abc.ABC, Generic[_T]):
   """Evaluates a regressor's prediction performance."""
 
-  TRAIN = tfds.Split.TRAIN
-  VALIDATION = tfds.Split.VALIDATION
-  TEST = tfds.Split.TEST
+  TRAIN = tfds.Split.TRAIN  # pyrefly: ignore[missing-attribute]
+  VALIDATION = tfds.Split.VALIDATION  # pyrefly: ignore[missing-attribute]
+  TEST = tfds.Split.TEST  # pyrefly: ignore[missing-attribute]
 
   # These are class-global to enforce fairness across all evaluators.
   FILTERS: Sequence[filters.Filter[_T]]

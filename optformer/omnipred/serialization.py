@@ -61,7 +61,7 @@ class SuggestionSerializer(s_lib.Serializer[vz.TrialSuggestion]):
     out = {'suggestion': param_value_dict}
     if self.include_metadata:
       serialized_metadata = self.metadata_serializer.to_str(suggestion.metadata)
-      out['x_metadata'] = serialized_metadata
+      out['x_metadata'] = serialized_metadata  # pyrefly: ignore[bad-assignment]
     return self.primitive_serializer.to_str(out)
 
 

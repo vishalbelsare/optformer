@@ -64,7 +64,7 @@ class PermutationExperimenterFactory(
     permutation_size = rng.randint(*self.permutation_size_range)
     scale = rng.uniform(*self.scale_range)
     exptr_ctr = rng.choice(self.experimenters)
-    return exptr_ctr(permutation_size, scale=scale, seed=seed)
+    return exptr_ctr(permutation_size, scale=scale, seed=seed)  # pyrefly: ignore[unexpected-keyword]
 
 
 @attrs.define
@@ -103,7 +103,7 @@ class BinomialExperimenterFactory(
     k = int(k_to_n_ratio * n)
     scale = rng.uniform(*self.scale_range)
     exptr_ctr = rng.choice(self.experimenters)
-    return exptr_ctr(n, k, scale=scale, seed=seed)
+    return exptr_ctr(n, k, scale=scale, seed=seed)  # pyrefly: ignore[unexpected-keyword]
 
 
 @attrs.define
@@ -157,4 +157,4 @@ class SymbolicRegressionFactory(
   def __call__(
       self, seed: Optional[int] = None
   ) -> experimenters_lib.SymbolicRegressionExperimenter:
-    return experimenters_lib.SymbolicRegressionExperimenter.from_seed(seed)
+    return experimenters_lib.SymbolicRegressionExperimenter.from_seed(seed)  # pyrefly: ignore[bad-argument-type]
